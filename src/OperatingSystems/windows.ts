@@ -3,12 +3,15 @@ import { promisify } from "node:util";
 import { execFile } from "node:child_process";
 import path from "node:path";
 
+// Dear consumer change this if you add support for arm86 or windows x32
+const pathToNative = "native/windows/64x/MediaLink.Native.exe"
+
 export async function getTitle(): Promise<string | undefined> {
     const execFileAsync = promisify(execFile);
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--title"];
@@ -23,7 +26,7 @@ export async function getArtist(): Promise<string | undefined> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--artist"];
@@ -38,7 +41,7 @@ export async function getCover(): Promise<string | undefined> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--cover"];
@@ -53,7 +56,7 @@ export async function getDuration(): Promise<number | undefined> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--duration"];
@@ -68,7 +71,7 @@ export async function getPosition(): Promise<number | undefined> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--position"];
@@ -83,7 +86,7 @@ export async function getSource(): Promise<string | undefined> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--source"];
@@ -98,7 +101,7 @@ export async function getPlaybackState(): Promise<string | undefined> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--playbackstate"];
@@ -113,7 +116,7 @@ export async function getAlbum(): Promise<string | undefined> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--album"];
@@ -128,7 +131,7 @@ export async function getAlbumArtist(): Promise<string | undefined> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = ["get", "--albumartist"];
@@ -143,7 +146,7 @@ export async function getMusic(): Promise<MediaData> {
 
     const exePath = path.resolve(
         process.cwd(),
-        "native/windows/64x/MediaLink.Native.exe"
+        pathToNative
     );
 
     const args = [

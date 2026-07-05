@@ -54,7 +54,7 @@ export async function getMusic(): Promise<MediaData> {
         Duration: Duration ?? 0,
         Position: Position ?? 0,
         Source: Source ?? "Unknown Source",
-        PlaybackState: PlaybackState ?? "Stopped",
+        PlaybackState: PlaybackState ?? "stopped",
         Album: Album ?? "Unknown Album",
         AlbumArtist: AlbumArtist ?? "Unknown Artist",
     }
