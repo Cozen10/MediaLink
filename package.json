@@ -2,7 +2,7 @@
   "name": "medialink",
   "version": "1.0.1",
   "description": "",
-  "license": "ISC",
+  "license": "MPL-2.0",
   "author": "",
   "type": "module",
   "main": "index.js",
