@@ -3,153 +3,65 @@ import { promisify } from "node:util";
 import { execFile } from "node:child_process";
 import path from "node:path";
 
-// Dear consumer change this if you add support for arm86 or windows x32
-const pathToNative = "native/windows/64x/MediaLink.Native.exe"
+const execFileAsync = promisify(execFile);
 
-export async function getTitle(): Promise<string | undefined> {
-    const execFileAsync = promisify(execFile);
-
+async function runNative(args: string[]): Promise<any> {
     const exePath = path.resolve(
         process.cwd(),
-        pathToNative
+        "native/windows/64x/MediaLink.Native.exe" // Dear consumer change this if you add support for arm86 or windows x32
     );
 
-    const args = ["get", "--title"];
+    const { stdout } = await execFileAsync(exePath, args, { maxBuffer: 1024 * 1024 * 100 });
+    return JSON.parse(stdout);
+}
 
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["title"];
+export async function getTitle(): Promise<string | undefined> {
+    const data = await runNative(["get", "--title"]);
+    return data["title"];
 }
 
 export async function getArtist(): Promise<string | undefined> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = ["get", "--artist"];
-
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["artist"];
+    const data = await runNative(["get", "--artist"]);
+    return data["artist"];
 }
 
 export async function getCover(): Promise<string | undefined> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = ["get", "--cover"];
-
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["cover"];
+    const data = await runNative(["get", "--cover"]);
+    return data["cover"];
 }
 
 export async function getDuration(): Promise<number | undefined> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = ["get", "--duration"];
-
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["duration"];
+    const data = await runNative(["get", "--duration"]);
+    return data["duration"];
 }
 
 export async function getPosition(): Promise<number | undefined> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = ["get", "--position"];
-
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["position"];
+    const data = await runNative(["get", "--position"]);
+    return data["position"];
 }
 
 export async function getSource(): Promise<string | undefined> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = ["get", "--source"];
-
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["source"];
+    const data = await runNative(["get", "--source"]);
+    return data["source"];
 }
 
 export async function getPlaybackState(): Promise<string | undefined> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = ["get", "--playbackstate"];
-
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["playbackstate"];
+    const data = await runNative(["get", "--playbackstate"]);
+    return data["playbackstate"];
 }
 
 export async function getAlbum(): Promise<string | undefined> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = ["get", "--album"];
-
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["album"];
+    const data = await runNative(["get", "--album"]);
+    return data["album"];
 }
 
 export async function getAlbumArtist(): Promise<string | undefined> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = ["get", "--albumartist"];
-
-    const { stdout } = await execFileAsync(exePath, args);
-
-    return JSON.parse(stdout)["albumartist"];
+    const data = await runNative(["get", "--albumartist"]);
+    return data["albumartist"];
 }
 
 export async function getMusic(): Promise<MediaData> {
-    const execFileAsync = promisify(execFile);
-
-    const exePath = path.resolve(
-        process.cwd(),
-        pathToNative
-    );
-
-    const args = [
+    const data = await runNative([
         "get",
         "--title",
         "--artist",
@@ -160,10 +72,7 @@ export async function getMusic(): Promise<MediaData> {
         "--playbackstate",
         "--album",
         "--albumartist"
-    ];
-
-    const { stdout } = await execFileAsync(exePath, args);
-    const data = JSON.parse(stdout);
+    ]);
 
     return {
         Title: data["title"] ?? "Unknown Title",

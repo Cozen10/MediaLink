@@ -10,7 +10,7 @@ const osMap: Record<string, string> = {
     sunos: "sunos",
 }
 
-export class Media {
+export default class Media {
     os: string;
     private osFile: Promise<FileOS>;
 

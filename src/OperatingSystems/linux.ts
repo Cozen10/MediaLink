@@ -1,61 +1,88 @@
 import type { MediaData } from "../shared/types.js"
+import { promisify } from "node:util";
+import { execFile } from "node:child_process";
+import path from "node:path";
 
-export async function getTitle() {
-    return
+const execFileAsync = promisify(execFile);
+
+async function runNative(args: string[]): Promise<any> {
+    const exePath = path.resolve(
+        process.cwd(),
+        "native/linux/MediaLink.Native" // Dear consumer change this if hate my native file that took me 3 hours to setup (i am not familiar with linux)
+    );
+
+    const { stdout } = await execFileAsync(exePath, args, { maxBuffer: 1024 * 1024 * 100 });
+    return JSON.parse(stdout);
 }
 
-export async function getArtist() {
-    return
+export async function getTitle(): Promise<string | undefined> {
+    const data = await runNative(["get", "--title"]);
+    return data["title"];
 }
 
-export async function getCover() {
-    return
+export async function getArtist(): Promise<string | undefined> {
+    const data = await runNative(["get", "--artist"]);
+    return data["artist"];
 }
 
-export async function getDuration() {
-    return
+export async function getCover(): Promise<string | undefined> {
+    const data = await runNative(["get", "--cover"]);
+    return data["cover"];
 }
 
-export async function getPosition() {
-    return
+export async function getDuration(): Promise<number | undefined> {
+    const data = await runNative(["get", "--duration"]);
+    return data["duration"];
 }
 
-export async function getSource() {
-    return
+export async function getPosition(): Promise<number | undefined> {
+    const data = await runNative(["get", "--position"]);
+    return data["position"];
 }
 
-export async function getPlaybackState() {
-    return
+export async function getSource(): Promise<string | undefined> {
+    const data = await runNative(["get", "--source"]);
+    return data["source"];
 }
 
-export async function getAlbum() {
-    return
+export async function getPlaybackState(): Promise<string | undefined> {
+    const data = await runNative(["get", "--playbackstate"]);
+    return data["playbackstate"];
 }
 
-export async function getAlbumArtist() {
-    return
+export async function getAlbum(): Promise<string | undefined> {
+    const data = await runNative(["get", "--album"]);
+    return data["album"];
+}
+
+export async function getAlbumArtist(): Promise<string | undefined> {
+    const data = await runNative(["get", "--albumartist"]);
+    return data["albumartist"];
 }
 
 export async function getMusic(): Promise<MediaData> {
-    const Title = await getTitle()
-    const Artist = await getArtist()
-    const Cover = await getCover()
-    const Duration = await getDuration()
-    const Position = await getPosition()
-    const Source = await getSource()
-    const PlaybackState = await getPlaybackState()
-    const Album = await getAlbum()
-    const AlbumArtist = await getAlbumArtist()
+    const data = await runNative([
+        "get",
+        "--title",
+        "--artist",
+        "--cover",
+        "--duration",
+        "--position",
+        "--source",
+        "--playbackstate",
+        "--album",
+        "--albumartist"
+    ]);
 
     return {
-        Title: Title ?? "Unknown Title",
-        Artist: Artist ?? "Unknown Artist",
-        Cover: Cover ?? "",
-        Duration: Duration ?? 0,
-        Position: Position ?? 0,
-        Source: Source ?? "Unknown Source",
-        PlaybackState: PlaybackState ?? "stopped",
-        Album: Album ?? "Unknown Album",
-        AlbumArtist: AlbumArtist ?? "Unknown Artist",
+        Title: data["title"] ?? "Unknown Title",
+        Artist: data["artist"] ?? "Unknown Artist",
+        Cover: data["cover"] ?? "",
+        Duration: data["duration"] ?? 0,
+        Position: data["position"] ?? 0,
+        Source: data["source"] ?? "Unknown Source",
+        PlaybackState: data["playbackstate"] ?? "Stopped",
+        Album: data["album"] ?? "Unknown Album",
+        AlbumArtist: data["albumartist"] ?? "Unknown Artist",
     }
 }
