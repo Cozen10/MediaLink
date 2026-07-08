@@ -1,62 +1,66 @@
-import type { FileOS, MediaData } from "./shared/types.js"
+import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import type { MediaData } from "./shared/types.js";
+import path from "node:path";
+import fs from "fs";
+import readline from "node:readline";
+import EventEmitter from "node:events";
 
 const osMap: Record<string, string> = {
-    win32: "windows",
-    darwin: "macos",
-    linux: "linux",
-    aix: "aix",
-    openbsd: "openbsd",
-    freebsd: "freebsd",
-    sunos: "sunos",
+    win32: "../native/windows/64x/MediaLink.Native.exe",
+    darwin: "undefined",
+    linux: "../native/linux/MediaLink.Native",
+    aix: "undefined",
+    openbsd: "undefined",
+    freebsd: "undefined",
+    sunos: "undefined",
 }
 
-export default class Media {
+export default class Media extends EventEmitter {
     os: string;
-    private osFile: Promise<FileOS>;
-
+    child: ChildProcessWithoutNullStreams | null = null;
+    rl: readline.Interface | null = null;
 
     constructor(os: string) {
+        super()
+
         this.os = os
-        this.osFile = import(`./OperatingSystems/${osMap[this.os]}.js`) as Promise<FileOS>
     }
 
-    async getMusic(): Promise<MediaData> {
-        return await (await this.osFile).getMusic()
+    async start() {
+        const exePath = path.resolve(import.meta.dirname, osMap[this.os] ?? "undefined");
+        if (!fs.existsSync(exePath)) throw new Error(`Unsupported OS: ${this.os}.`);
+
+        this.child = spawn(exePath);
+
+        this.rl = readline.createInterface({
+            input: this.child.stdout
+        });
+
+        this.rl.on("line", (line) => {
+            const data = JSON.parse(line);
+            this.emit("update", data)
+        });
+        
+        this.child.stderr.on("data", (chunk) => {
+            const errorMessage = chunk.toString("utf8");
+            this.emit("error", errorMessage)
+            console.error(errorMessage)
+        });
+        
+        this.child.on("close", () => {
+            this.rl?.close()
+            this.child = null;
+            this.rl = null;
+        });
     }
 
-    async getTitle(): Promise<string | undefined> {
-        return await (await this.osFile).getTitle()
-    }
+    stop() {
+        if (!this.child) return console.warn("Process not started!");
+        
+        this.child.kill()
+        this.rl?.close()
 
-    async getArtist(): Promise<string | undefined> {
-        return await (await this.osFile).getArtist()
-    }
-
-    async getCover(): Promise<string | undefined> {
-        return await (await this.osFile).getCover()
-    }
-
-    async getDuration(): Promise<number | undefined> {
-        return await (await this.osFile).getDuration()
-    }
-
-    async getPosition(): Promise<number | undefined> {
-        return await (await this.osFile).getPosition()
-    }
-
-    async getSource(): Promise<string | undefined> {
-        return await (await this.osFile).getSource()
-    }
-
-    async getPlaybackState(): Promise<string | undefined> {
-        return await (await this.osFile).getPlaybackState()
-    }
-
-    async getAlbum(): Promise<string | undefined> {
-        return await (await this.osFile).getAlbum()
-    }
-
-    async getAlbumArtist(): Promise<string | undefined> {
-        return await (await this.osFile).getAlbumArtist()
+        this.child = null;
+        this.rl = null;
     }
 }
