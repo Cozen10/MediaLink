@@ -1,6 +1,6 @@
 {
   "name": "medialink",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A lightweight, dependency-free library for accessing system media metadata, playback state, and artwork across Windows, Linux, and soon macOS.",
   "license": "MPL-2.0",
   "author": "Cozen10",
