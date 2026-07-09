@@ -1,16 +1,47 @@
 {
   "name": "medialink",
   "version": "1.0.3",
-  "description": "",
+  "description": "A lightweight, dependency-free library for accessing system media metadata, playback state, and artwork across Windows, Linux, and soon macOS.",
   "license": "MPL-2.0",
-  "author": "",
+  "author": "Cozen10",
   "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
     "typescript": "^6.0.3"
-  }
+  },
+  "keywords": [
+    "media",
+    "media-session",
+    "now-playing",
+    "music",
+    "electron",
+    "node",
+    "nodejs",
+    "cross-platform",
+    "windows",
+    "linux",
+    "macos",
+    "metadata",
+    "artwork",
+    "playback",
+    "album-art",
+    "mpris",
+    "smtc",
+    "media-controls",
+    "native",
+    "system-media"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cozen10/MediaLink.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Cozen10/MediaLink/issues"
+  },
+  "homepage": "https://github.com/Cozen10/MediaLink#readme"
 }
