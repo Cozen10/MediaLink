@@ -5,7 +5,7 @@ export interface MediaData {
     duration: number
     position: number
     source: string
-    playbackState: string
+    playbackstate: string
     album: string
-    albumArtist: string
+    albumartist: string
 }
