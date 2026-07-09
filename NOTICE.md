@@ -1,4 +1,4 @@
-# PLCLink Notices
+# MediaLink Notices
 
 Copyright (c) 2026 Anastasios Fountoglou (Cozen10)
 
